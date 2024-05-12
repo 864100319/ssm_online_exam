@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.bestguo.mapper.RecordMapper">
+
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.Record">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="examid" column="examId" jdbcType="INTEGER"/>
+            <result property="stuid" column="stuId" jdbcType="INTEGER"/>
+            <result property="answer" column="answer" jdbcType="VARCHAR"/>
+            <result property="wrong" column="wrong" jdbcType="VARCHAR"/>
+            <result property="correct" column="correct" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,examId,stuId,
+        answer,wrong,correct,
+        score
+    </sql>
+
+    <!-- 学生查询考试成绩 -->
+    <select id="findExamPassed" parameterType="Integer" resultType="Record">
+        select * from Record where  stuId =#{stuId}
+    </select>
+
+    <!-- 通过班级id、试卷id查询学生成绩，并且对学生成绩进行排序 -->
+    <select id="getRecordByClassId" resultType="top.bestguo.vo.GradeTable">
+        select * from (select stu.stuId, stu.username, stu.gender, sc.classId, exam.id examId, record.score
+        from student stu
+            join student_class sc on sc.stuId = stu.id
+            left join record on stu.id = record.stuId and examId = #{examId}
+            left join exam on record.examId = exam.id
+        where classId = #{classId}) as gradetable
+        <if test="desc == 1">
+            order by gradetable.score is null, gradetable.score desc
+        </if>
+        <if test="desc == 0">
+            order by gradetable.score is null, gradetable.score asc
+        </if>
+    </select>
+</mapper>

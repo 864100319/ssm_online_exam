@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.bestguo.mapper.ExamMapper">
+
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.Exam">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="examname" column="examName" jdbcType="VARCHAR"/>
+            <result property="starttime" column="startTime" jdbcType="TIMESTAMP"/>
+            <result property="stoptime" column="stopTime" jdbcType="TIMESTAMP"/>
+            <result property="selectone" column="selectOne" jdbcType="DOUBLE"/>
+            <result property="selectmore" column="selectMore" jdbcType="DOUBLE"/>
+            <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="qlist" column="qList" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,examName,startTime,
+        stopTime,selectOne,selectMore,
+        score,qList
+    </sql>
+
+    <!-- 通过班级id查询考试信息 -->
+    <select id="findExamInfoByClassId" parameterType="integer" resultMap="BaseResultMap">
+        select exam.* from exam, exam_class where exam_class.examId = exam.id and classId = #{classId}
+    </select>
+
+    <!-- 查询最近插入的考试信息的id -->
+    <select id="findExamRecent" resultType="integer">
+        select id from exam order by id desc limit 1;
+    </select>
+    <select id="findExam" parameterType="integer" resultType="Exam">
+        select *from Exam where id =#{id}
+    </select>
+</mapper>

@@ -1,0 +1,50 @@
+
+<web-app>
+
+  <display-name>Archetype Created Web Application</display-name>
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:beans.xml</param-value>
+  </context-param>
+
+  <servlet>
+    <servlet-name>mvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!-- 加载 mvc 的参数 -->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:springmvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- 映射器 -->
+  <servlet-mapping>
+    <servlet-name>mvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>mvc-filter</filter-name>
+    <filter-class>org.springframework.web.servlet.resource.ResourceUrlEncodingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>mvc-filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!--  <servlet-mapping>-->
+  <!--    <servlet-name>default</servlet-name>-->
+  <!--    <url-pattern>*.js</url-pattern>-->
+  <!--  </servlet-mapping>-->
+  <!--  <servlet-mapping>-->
+  <!--    <servlet-name>default</servlet-name>-->
+  <!--    <url-pattern>*.css</url-pattern>-->
+  <!--  </servlet-mapping>-->
+
+</web-app>

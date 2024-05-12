@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.bestguo.mapper.StudentMapper">
+
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.Student">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="stuid" column="stuId" jdbcType="INTEGER"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="gender" column="gender" jdbcType="TINYINT"/>
+<!--        <collection property="ClassesList" column="id" ofType="classes"-->
+
+<!--        select=""-->
+<!--        >-->
+
+
+<!--        </collection>-->
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,email,stuId,
+        username,password,gender
+    </sql>
+<!-- 查询学生用户进行登录-->
+    <select id="findStudent" parameterType="String" resultType="student">
+        select <include refid="Base_Column_List"/> from student where
+        email=#{email} and password=#{password}
+    </select>
+<!-- 插入学生注册信息-->
+    <insert id="addStudent" parameterType="student">
+        insert into student(email,stuId,username,password,gender) values (#{email},#{stuid},#{username},#{password},#{gender})
+    </insert>
+<!-- 查询课程码并显示 -->
+    <select id="findClassInfo" parameterType="Integer" resultType="top.bestguo.vo.ClassInfo">
+        SELECT classCode,className,classDesc,username FROM classes JOIN teacher ON classes.belongTeacher=teacher.id
+          WHERE classCode=#{classCode}
+    </select>
+    <!-- 通过班级id查询学生信息 -->
+    <select id="selectStudentByClassId" parameterType="integer" resultType="student">
+        select * from student where id in (select stuId from student_class where classId = #{classId})
+    </select>
+</mapper>
